@@ -1,17 +1,16 @@
-var Person = function(x, y, r, col) {
+var Person = function(position, radius, col) {
   this.shape = new createjs.Shape();
-  this.shape.graphics.beginFill(col).drawCircle(0, 0,r);
-  this.shape.x = x;
-  this.shape.y = y;
+  this.shape.graphics.beginFill(col).drawCircle(0, 0, radius);
+  this.shape.setTransform(position.x, position.y);
 
   var person = this;
   this.shape.addEventListener('click', function(e) { Game.kill(person); });
-  createjs.Ticker.addEventListener('tick',function(e) { person.update(e.delta); });
+  createjs.Ticker.addEventListener('tick', function(e) { person.update(e.delta); });
 };
 
 Person.prototype.update = function(delta) {
   this.shape.x += delta * 0.01;
-}
+};
 
 // returns a random colour string for beginFill() and other methods.
 // Limited to avoid being too close to pure black and pure white
@@ -22,11 +21,14 @@ function randomColor(){
   return createjs.Graphics.getRGB(r,g,b);
 }
 
+function randomPosition(x, y, w, h) {
+  return { x: _.random(x, x + w), y: _.random(y, y + h) };
+}
+
 function randomPerson(width, height) {
-  var radius = _.random(35, 50);
-  var x = _.random(radius, width - radius);
-  var y = _.random(radius, height - radius);
-  return new Person(x, y, radius, randomColor());
+  var radius   = _.random(35, 50);
+  var position = randomPosition(radius, radius, width - radius, height - radius);
+  return new Person(position, radius, randomColor());
 }
 
 function randomCrowd(amount, width, height) {
