@@ -1,15 +1,18 @@
-var Person = function(position, radius, col) {
+var Person = function(position, velocity, radius, color) {
+  this.velocity = velocity;
+
   this.shape = new createjs.Shape();
-  this.shape.graphics.beginFill(col).drawCircle(0, 0, radius);
+  this.shape.graphics.beginFill(color).drawCircle(0, 0, radius);
   this.shape.setTransform(position.x, position.y);
 
   var person = this;
   this.shape.addEventListener('click', function(e) { Game.kill(person); });
-  createjs.Ticker.addEventListener('tick', function(e) { person.update(e.delta); });
+  createjs.Ticker.addEventListener('tick', function(e) { person.update(e.delta * 0.001); });
 };
 
 Person.prototype.update = function(delta) {
-  this.shape.x += delta * 0.01;
+  this.shape.x += this.velocity.x * delta;
+  this.shape.y += this.velocity.y * delta;
 };
 
 // returns a random colour string for beginFill() and other methods.
@@ -25,10 +28,14 @@ function randomPosition(x, y, w, h) {
   return { x: _.random(x, x + w), y: _.random(y, y + h) };
 }
 
+function randomVelocity() {
+  return { x: _.random(-20, 20), y: _.random(-20, 20) };
+}
+
 function randomPerson(width, height) {
   var radius   = _.random(35, 50);
   var position = randomPosition(radius, radius, width - radius, height - radius);
-  return new Person(position, radius, randomColor());
+  return new Person(position, randomVelocity(), radius, randomColor());
 }
 
 function randomCrowd(amount, width, height) {
