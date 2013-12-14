@@ -30,4 +30,9 @@ function randomCrowd(amount, width, height) {
 function addCrowd(stage, amount) {
   var crowd = randomCrowd(amount, stage.canvas.width, stage.canvas.height);
   _.each(crowd, function(p) { stage.addChild(p.shape) });
+  setPersonAsTarget(_.first(crowd));
+}
+  
+function setPersonAsTarget(person){
+  person.isTarget=true;
 }
