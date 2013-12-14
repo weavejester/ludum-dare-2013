@@ -3,9 +3,15 @@ var Person = function(x, y, r, col) {
   this.shape.graphics.beginFill(col).drawCircle(0, 0,r);
   this.shape.x = x;
   this.shape.y = y;
+
   var person = this;
-  this.shape.addEventListener("click", function(e) { Game.kill(person); });
+  this.shape.addEventListener('click', function(e) { Game.kill(person); });
+  createjs.Ticker.addEventListener('tick',function(e) { person.update(e.delta); });
 };
+
+Person.prototype.update = function(delta) {
+  this.shape.x += delta * 0.01;
+}
 
 // returns a random colour string for beginFill() and other methods.
 // Limited to avoid being too close to pure black and pure white
