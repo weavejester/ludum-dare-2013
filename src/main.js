@@ -1,11 +1,14 @@
 window.onload = function() {
   var stage = new createjs.Stage("game");
-  
-  var circle = new createjs.Shape();
-  circle.graphics.beginFill("red").drawCircle(0, 0, 50);
-  circle.x = 100;
-  circle.y = 100;
-  stage.addChild(circle);
-  
+  person = createPerson();
+  stage.addChild(person);
   stage.update();
 };
+
+function createPerson() {
+  var person = new createjs.Shape();
+  person.graphics.beginFill("red").drawCircle(0, 0, 50);
+  person.x = 100;
+  person.y = 100;
+  return person;
+}
