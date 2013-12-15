@@ -1,21 +1,3 @@
-var Person = function(position, radius, color) {
-  this.radius = radius;
-  this.velocity = {x: 0, y: 0};
-
-  this.shape = new createjs.Shape();
-  this.shape.graphics.beginFill(color).drawCircle(0, 0, radius);
-  this.shape.setTransform(position.x, position.y);
-
-  var person = this;
-  this.shape.addEventListener('click', function(e) { Game.current.kill(person); });
-  createjs.Ticker.addEventListener('tick', function(e) { person.update(e.delta * 0.001); });
-
-  //window.setInterval(function() { person.velocity = changedirection(person); }, _.random(1000, 5000));
-  window.setInterval(function() { person.velocity = randomVelocity(); }, _.random(1000, 5000));
- };
-
-// returns a random colour string for beginFill() and other methods.
-// Limited to avoid being too close to pure black and pure white
 function randomColor(){
   var r = _.random(32, 224);
   var g = _.random(32, 224);
@@ -23,26 +5,28 @@ function randomColor(){
   return createjs.Graphics.getRGB(r,g,b);
 }
 
-function randomPerson(width, height) {
-  var radius   = _.random(35, 50);
-  var bounds   = { x: radius, y: radius, w: width - (radius * 2), h: height - (radius * 2) };
-  var position = randomPosition(bounds);
-  var person   = new Person(position, radius, randomColor());
-  person.bounds   = bounds;
-  person.velocity = randomVelocity();
-  return person;
+function personShape(opts) {
+  var shape = new createjs.Shape();
+  shape.graphics.
+    beginFill(opts.body.color).
+    drawRoundRect(0, opts.head.radius * 0.8, opts.body.width, opts.body.height, 10).
+    beginFill(opts.head.color).
+    drawCircle(opts.body.width * 0.5, 0, opts.head.radius);
+  return shape;
 }
 
-function randomCrowd(amount, width, height) {
-  return _.times(amount, function(i) { return randomPerson(width, height); });
-}
+var Person = function(position, bounds, velocity, shapeOptions) {
+  this.bounds   = bounds;
+  this.velocity = velocity;
+  this.shape    = personShape(shapeOptions).setTransform(position.x, position.y);
 
-function addCrowd(stage, amount) {
-  var crowd = randomCrowd(amount, stage.canvas.width, stage.canvas.height);
-  _.each(crowd, function(p) { stage.addChild(p.shape) });
-  _.first(crowd).setAsTarget();
-}
+  var person = this;
+  this.shape.addEventListener('click', function(e) { Game.current.kill(person); });
+  createjs.Ticker.addEventListener('tick', function(e) { person.update(e.delta * 0.001); });
 
+  window.setInterval(function() { person.velocity = randomVelocity(); }, _.random(1000, 5000));
+};
+ 
 Person.prototype.update = function(delta) {
   this.shape.x += this.velocity.x * delta;
   this.shape.y += this.velocity.y * delta;
@@ -52,3 +36,26 @@ Person.prototype.update = function(delta) {
 Person.prototype.setAsTarget = function() {
   this.isTarget = true;
 };
+
+function randomPerson(width, height) {
+  var shapeOptions = {
+    head: { color: randomColor(), radius: _.random(20, 23) },
+    body: { color: randomColor(), width: _.random(35, 70), height: _.random(50, 80) }
+  };
+  
+  var bounds   = { x: 0, y: 0, w: width, h: height };
+  var position = randomPosition(bounds);
+  var velocity = randomVelocity();
+  
+  return new Person(position, bounds, velocity, shapeOptions);
+}
+
+function randomCrowd(amount, width, height) {
+  return _.times(amount, function(i) { return randomPerson(width, height); });
+}
+
+function addCrowd(stage, amount) {
+  var crowd = randomCrowd(amount, stage.canvas.width, stage.canvas.height);
+  _(crowd).each(function(p) { stage.addChild(p.shape) });
+  _(crowd).first().setAsTarget();
+}
