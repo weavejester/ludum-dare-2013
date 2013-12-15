@@ -24,7 +24,7 @@ Game.prototype.menu_game = function() {
 Game.prototype.game_end = function() {
   this.stage.removeAllChildren();
   showVictim(this.victim);
-  if (this.victim.IsTarget)
+  if (this.victim.isTarget)
     { 
       alert("Well done! You shot the bad guy!");
     }  
