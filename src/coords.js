@@ -1,18 +1,25 @@
 // smooth rotation
-function changeDirection(person) {
+function changedirection(person){
   var vx = person.velocity.x;
   var vy = person.velocity.y;
   
-  var speed     = Math.atan(vy/vx)
-  var direction = Math.asin(vy);
-  var angle     = _.random(-1,1);
+  var speed = Math.atan(vx/vy);
+  var direction = Math.asin(vx);
   
-  direction = angle + (angle * rads(15)); // 15 degrees should be a smooth enough step-size
+/*  console.log("speed="+speed);
+  console.log("direction="+direction);
+  console.log("convert="+degs(direction));
+  */
+  
+  var angle = _.random(-1,1);
+  var direction=angle+(angle*(rads(15))); // 15 degrees should be a smooth enough step-size
+  
   vx = speed*(Math.sin(direction));
   vy = speed*(Math.cos(direction));
+  //person.velocity.x = vx
+  //person.velocity.y = vy;
   
-  person.velocity.x = vx
-  person.velocity.y = vy;
+  return {x:vx,y:vy};
 }
   
 function randomVelocity() {
@@ -44,9 +51,9 @@ function confine(value, min, max) {
 }
 
 function rads(degrees){
-  return degrees*(Math.PI/180);
+  return degrees*(180.0/Math.PI);
 }
 
 function degs(radians){
-  return radians*(180/Math.PI);
+  return radians*(Math.PI/180.0);
 }
