@@ -5,15 +5,26 @@ function randomColor(){
   return createjs.Graphics.getRGB(r,g,b);
 }
 
+function drawPerson(graphics, opts) {
+  graphics.
+    clear().
+    beginFill(opts.bodyColor).
+    drawRoundRect(0, opts.headRadius * 0.8, opts.bodyWidth, opts.bodyHeight, 10).
+    beginFill(opts.headColor).
+    drawCircle(opts.bodyWidth * 0.5, 0, opts.headRadius);
+}
+
+function drawTarget(graphics, opts) {
+  opts = _.clone(opts);
+  opts.headColor = "red";
+  opts.bodyColor = "red";
+  drawPerson(graphics, opts);
+}
+
 function personShape(opts) {
   var shape = new createjs.Shape();
-  shape.graphics.
-    beginFill(opts.body.color).
-    drawRoundRect(0, opts.head.radius * 0.8, opts.body.width, opts.body.height, 10).
-    beginFill(opts.head.color).
-    drawCircle(opts.body.width * 0.5, 0, opts.head.radius);
-
-  shape.height = opts.head.radius * 0.8 + opts.body.height;
+  drawPerson(shape.graphics, opts);
+  shape.height = opts.headRadius * 0.8 + opts.bodyHeight;
   return shape;
 }
 
@@ -30,10 +41,16 @@ var Person = function(position, bounds, velocity, shapeOptions) {
 };
  
 Person.prototype.update = function(delta) {
+  if (this==Game.current.victim) {
+    return;
+  }
+  
   this.shape.x += this.velocity.x * delta;
   this.shape.y += this.velocity.y * delta;
   confineCoord(this.shape, this.bounds);
 };
+
+
 
 Person.prototype.setAsTarget = function() {
   this.isTarget = true;
@@ -55,8 +72,11 @@ function comparePersonShapes(shape1, shape2) {
 
 function randomPerson(width, height) {
   var shapeOptions = {
-    head: { color: randomColor(), radius: _.random(20, 23) },
-    body: { color: randomColor(), width: _.random(35, 70), height: _.random(50, 80) }
+    headColor: randomColor(),
+    headRadius: _.random(20, 23),
+    bodyColor: randomColor(),
+    bodyWidth: _.random(35, 70),
+    bodyHeight: _.random(50, 80)
   };
   
   var bounds   = { x: 0, y: 25, w: (width - 140), h: (height - 160) };

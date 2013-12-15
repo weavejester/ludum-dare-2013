@@ -2,6 +2,7 @@ var Game = function(stage) {
   this.state = 'init';
   this.stage = stage;
   Game.current = this;
+  
 };
 
 Game.prototype.changeState = function(newState) {
@@ -20,14 +21,25 @@ Game.prototype.menu_game = function() {
   addCrowd(this.stage, 10);
 }
 
-Game.prototype.game_win = function() {
-  alert("Well done! You shot the bad guy!");
+Game.prototype.game_end = function() {
+  this.stage.removeAllChildren();
+  showVictim(this.victim);
+  if (this.victim.IsTarget)
+    { 
+      alert("Well done! You shot the bad guy!");
+    }  
+    else
+    {
+      alert("You killed an innocent civilian! You monster!");
+    }
 }
 
-Game.prototype.game_lose = function() {
-  alert("You killed an innocent civilian! You monster!");
+Game.prototype.end_menu = function() {
+  delete this.victim;
+  displayMenu(this.stage);
 }
 
 Game.prototype.kill = function(person) {
-  this.changeState(person.isTarget ? 'win' : 'lose');
+  this.victim=person;
+  this.changeState('end');
 };

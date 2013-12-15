@@ -1,4 +1,4 @@
-function createButton(px, py, w, h, text, bcol) {
+function createButton(px, py, w, h, text, bcol,newstate) {
   var background = new createjs.Shape();
   background.name = "background";
   background.graphics.beginFill(bcol).drawRoundRect(px-(w*0.5), py-(h*0.5), w, h, 10);
@@ -18,19 +18,21 @@ function createButton(px, py, w, h, text, bcol) {
 
   // set up listeners for all display objects, for both the non-capture (bubble / target) and capture phases:
   _([button, label, background]).each(function(target) {
-    target.addEventListener('click', function(e) { Game.current.changeState('game'); });
+    target.addEventListener('click', function(e) { Game.current.changeState(newstate); });
   });
   
   return button;
 }
 
 function displayMenu(stage) {
-  var startButton = createButton(stage.canvas.width*0.5,stage.canvas.height*0.5,120,40,"Play","black");
+  var startButton = createButton(stage.canvas.width*0.5,stage.canvas.height*0.5,120,40,"Play","black","game");
   stage.addChild(startButton);
 }
 
-
-
-
-
-
+function showVictim(victimperson) {
+    var stage=Game.current.stage;
+    var menuButton = createButton(stage.canvas.width*0.5,stage.canvas.height*0.5,120,40,"OK","red","menu");
+    stage.addChild(menuButton);
+    stage.addChild(victimperson.shape);
+  }
+  
