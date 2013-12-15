@@ -5,9 +5,11 @@ var Game = function(stage) {
 };
 
 Game.prototype.changeState = function(newState) {
-  this.stage.removeAllChildren();
-  this[this.state + "_" + newState]();
-  this.state = newState;
+  if (this.state != newState) {
+    this.stage.removeAllChildren();
+    this[this.state + "_" + newState]();
+    this.state = newState;
+  }
 }
 
 Game.prototype.init_menu = function() {
