@@ -1,7 +1,7 @@
 function randomColor(){
-  var r = _.random(32, 224);
-  var g = _.random(32, 224);
-  var b = _.random(32, 224);
+  var r = _.random(150, 200);
+  var g = _.random(150, 200);
+  var b = _.random(150, 200);
   return createjs.Graphics.getRGB(r,g,b);
 }
 
@@ -32,6 +32,7 @@ var Person = function(position, bounds, velocity, shapeOptions) {
   this.bounds   = bounds;
   this.velocity = velocity;
   this.shape    = personShape(shapeOptions).setTransform(position.x, position.y);
+  this.shapeOptions = shapeOptions;
 
   var person = this;
   this.shape.addEventListener('click', function(e) { Game.current.kill(person); });
@@ -50,10 +51,11 @@ Person.prototype.update = function(delta) {
   confineCoord(this.shape, this.bounds);
 };
 
-
-
 Person.prototype.setAsTarget = function() {
   this.isTarget = true;
+  drawTarget(this.shape.graphics, this.shapeOptions);
+  var person = this;
+  window.setTimeout(function() { drawPerson(person.shape.graphics, person.shapeOptions); }, 2000);
 };
 
 function bottomY(shape) {
