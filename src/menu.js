@@ -15,19 +15,12 @@ function createButton(px, py, w, h, text, bcol) {
   button.x = w;
   button.y = h;
   button.addChild(background, label);
-  // setting mouseChildren to false will cause events to be dispatched directly from the button instead of its children.
-  // button.mouseChildren = false;
-
-  //	stage.addChild(button, output);
 
   // set up listeners for all display objects, for both the non-capture (bubble / target) and capture phases:
-  var targets = [button, label, background];
-  for (var i = 0; i < targets.length; i++) {
-    var target = targets[i];
-    target.addEventListener('click', function(e) {
-      Game.current.changeState('game');
-    });
-  }
+  _([button, label, background]).each(function(target) {
+    target.addEventListener('click', function(e) { Game.current.changeState('game'); });
+  });
+  
   return button;
 }
 
