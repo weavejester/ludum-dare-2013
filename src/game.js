@@ -1,6 +1,9 @@
-var Game = {};
+var Game = function(stage) {
+  this.stage = stage;
+  Game.current = this;
+};
 
-Game.kill = function(person) {
+Game.prototype.kill = function(person) {
   if (person.isTarget) {
     Game.success();
   }
@@ -9,10 +12,10 @@ Game.kill = function(person) {
   }
 };
 
-Game.success = function(){
+Game.prototype.success = function(){
   alert("Well done! You shot the bad guy!");
 };
   
-Game.failure = function(){
+Game.prototype.failure = function(){
   alert("You killed an innocent civilian! You monster!");
 };  

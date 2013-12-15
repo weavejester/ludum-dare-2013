@@ -7,7 +7,7 @@ var Person = function(position, radius, color) {
   this.shape.setTransform(position.x, position.y);
 
   var person = this;
-  this.shape.addEventListener('click', function(e) { Game.kill(person); });
+  this.shape.addEventListener('click', function(e) { Game.current.kill(person); });
   createjs.Ticker.addEventListener('tick', function(e) { person.update(e.delta * 0.001); });
 
   window.setInterval(function() { person.velocity = randomVelocity(); }, _.random(1000, 5000));
