@@ -18,7 +18,7 @@ Game.prototype.init_menu = function() {
 }
 
 Game.prototype.menu_game = function() {
-  addCrowd(this.stage, 10);
+  addCrowd(this.stage, 30);
 }
 
 Game.prototype.game_end = function() {

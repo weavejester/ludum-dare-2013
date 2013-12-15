@@ -1,7 +1,7 @@
 function randomColor(){
-  var r = _.random(150, 200);
-  var g = _.random(150, 200);
-  var b = _.random(150, 200);
+  var r = _.random(100, 170);
+  var g = _.random(100, 170);
+  var b = _.random(150, 230);
   return createjs.Graphics.getRGB(r,g,b);
 }
 
