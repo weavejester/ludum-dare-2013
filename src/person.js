@@ -12,6 +12,8 @@ function personShape(opts) {
     drawRoundRect(0, opts.head.radius * 0.8, opts.body.width, opts.body.height, 10).
     beginFill(opts.head.color).
     drawCircle(opts.body.width * 0.5, 0, opts.head.radius);
+
+  shape.height = opts.head.radius * 0.8 + opts.body.height;
   return shape;
 }
 
@@ -37,13 +39,27 @@ Person.prototype.setAsTarget = function() {
   this.isTarget = true;
 };
 
+function bottomY(shape) {
+  return shape.y + shape.height;
+}
+
+function comparePersonShapes(shape1, shape2) {
+  if (bottomY(shape1) == bottomY(shape2)) {
+    return 0;
+  } else if (bottomY(shape1) < bottomY(shape2)) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
 function randomPerson(width, height) {
   var shapeOptions = {
     head: { color: randomColor(), radius: _.random(20, 23) },
     body: { color: randomColor(), width: _.random(35, 70), height: _.random(50, 80) }
   };
   
-  var bounds   = { x: 0, y: 0, w: width, h: height };
+  var bounds   = { x: 0, y: 25, w: (width - 140), h: (height - 160) };
   var position = randomPosition(bounds);
   var velocity = randomVelocity();
   
