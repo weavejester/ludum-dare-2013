@@ -1,121 +1,86 @@
-function randomFleshColor(){
-  var h = _.random(  58 , 62  );
-  var s = _.random(  30 , 160 );
-  var l = _.random(  32 , 224 );
-  
-  var rgb=hslToRgb(h,s,l);
-  var r = getColorRed(rgb);
-  var g = getColorGreen(rgb);
-  var b = getColorBlue(rgb);
-  
-  return createjs.Graphics.getRGB(r,g,b);
-  
-}
-function randomClothingColor(){
-  var h = _.random(  120, 360 );
-  var s = _.random(  192, 255 );
-  var l = _.random(  32 , 224 );
-  
-  var rgb=hslToRgb(h,s,l);
-  var r = getColorRed(rgb);
-  var g = getColorGreen(rgb);
-  var b = getColorBlue(rgb);
-  
-  return createjs.Graphics.getRGB(r,g,b);
-}
 
+function hueCalculation(p, q, t) {
+  if (t < 0)
+    {
+     t = 1-(Math.abs(t % 1));
+   }
+ if (t > 1)
+   {
+     t%=1;
+   }
+ if (t < 0.1667) {
+   return p + (q - p) * 6 * t;
+ }
+ if (t < 0.5) {
+   return q;
+ }
+ if (t < 0.6667) {
+   return p + (q - p) * (2/3 - t) * 6;
+ }
+ return p;
+}
 
 function hslToRgb(h, s, l) {
-  var r;
-  var g;
-  var b;
 
-  var temp1;
-  var temp2;
-  var rtemp;
-  var gtemp;
-  var btemp;
+  //Normalise arguments
+  h*=0.00278;
+  s*=0.00392;
+  l*=0.00392;
 
+  var r, g, b;
+   
   if (s === 0) {
-    r = 1;
-    g = 1;
-    b = 1;
+    r = g = b = l; // achromatic
   }
-  else {
-    if (l < 128) {
-      temp2 = l * (255 + s) * 0.003922;
-    }
-
-    else {
-      temp2 = (l + s) - (l * s) * 0.003922;
-    }
-
-    temp1 = 2 * l - temp2;
-    rtemp = h + 120;
-    rtemp = rtemp % 360;
-
-    gtemp = h;
-
-    btemp = h + 240;
-
-    btemp = btemp % 360;
-
-    // Red
-    if (rtemp < 60) {
-      r = temp1 + (temp2 - temp1) * rtemp * 0.016667;
-    }
-    else {
-      if (rtemp < 180) {
-        r = temp2;
-      }
-      else {
-        if (rtemp < 240) {
-          r = temp1 + (temp2 - temp1) * (240 - rtemp) * 0.016667;
-        }
-        else {
-          r = temp1;
-        }
-
-        // Green		
-        if (gtemp < 60) {
-          g = temp1 + (temp2 - temp1) * gtemp * 0.016667;
-        }
-        else {
-          if (gtemp < 180) {
-            g = temp2;
-          }
-          else {
-            if (gtemp < 240) {
-              g = temp1 + (temp2 - temp1) * (240 - gtemp) * 0.016667;
-            }
-            else {
-              g = temp1;
-            }
-
-            // Blue		
-            if (btemp < 60) {
-              b = temp1 + (temp2 - temp1) * btemp * 0.016667;
-            }
-            else {
-              if (btemp < 180) {
-                b = temp2;
-              }
-              else {
-                if (btemp < 240) {
-                  b = temp1 + (temp2 - temp1) * (240 - btemp) * 0.016667;
-                }
-                else {
-                  b = temp1;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+  else  {
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+     
+    r = hueCalculation(p, q, h + 0.333 );
+    g = hueCalculation(p, q, h);
+    b = hueCalculation(p, q, h - 0.333);
   }
+  
+  r*=255;
+  g*=255;
+  b*=255;
+  
   var rgb = (r & 255) | ((g & 255) << 8) | ((b & 255) << 16);
   return rgb;
+}
+
+function randomFleshColor() {
+  var h = _.random(12 , 20);
+  var s = _.random(32 , 128);
+  var l = _.random(32,224);
+
+  var rgb = hslToRgb(h, s, l);
+  var r = getColorRed(rgb);
+  var g = getColorGreen(rgb);
+  var b = getColorBlue(rgb);
+
+  return createjs.Graphics.getRGB(r, g, b);
+
+}
+
+function randomClothingColor() {
+  var h = _.random(0, 300);
+
+  if (h < 150)
+  //No red clothes!
+  {
+    h = 360 - h;
+  }
+
+  var s = _.random(192, 255);
+  var l = _.random(32, 224);
+
+  var rgb = hslToRgb(h, s, l);
+  var r = getColorRed(rgb);
+  var g = getColorGreen(rgb);
+  var b = getColorBlue(rgb);
+
+  return createjs.Graphics.getRGB(r, g, b);
 }
 
 function getColorRed(rgb) {
@@ -165,18 +130,18 @@ function Hue(r, g, b) {
 
   switch (max) {
   case r:
-    hue = 60 * (g - b) / delta;
+    hue = 60 * ((g - b) / delta);
     break;
   case g:
-    hue = 120 + 60 * (b - r) / delta;
+    hue = 120 + (60 * ((b - r) / delta));
     break;
   case b:
-    hue = 240 + 60 * (r - g) / delta;
+    hue = 240 + (60 * ((r - g) / delta));
     break;
   }
 
   if ((Math.abs(hue)) > 360) {
-    hue = hue % 360;
+    hue %= 360;
   }
 
   if (hue < 0) {
