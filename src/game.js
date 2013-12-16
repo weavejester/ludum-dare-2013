@@ -22,16 +22,31 @@ Game.prototype.menu_game = function() {
 }
 
 Game.prototype.game_end = function() {
-  this.stage.removeAllChildren();
-  showVictim(this.victim);
-  if (this.victim.isTarget)
+ 
+  var stage=this.stage;
+  var deadperson=this.victim;
+  stage.removeAllChildren();
+
+  var text="";
+  
+  if (deadperson.isTarget)
     { 
-      alert("Well done! You shot the bad guy!");
+      text="Well done! You shot the bad guy!";
+      //alert("Well done! You shot the bad guy!");
     }  
     else
     {
-      alert("You killed an innocent civilian! You monster!");
+      text="You killed an innocent civilian! You monster!";
+      //alert("You killed an innocent civilian! You monster!");
     }
+
+  var gameovermessage = new createjs.Text(text, "bold 24px Arial", "red");
+  gameovermessage.textAlign = "center";
+  gameovermessage.x = stage.canvas.width*0.5;
+  gameovermessage.y = 20;
+  
+  stage.addChild(gameovermessage);
+  showVictim(deadperson);
 }
 
 Game.prototype.end_menu = function() {
