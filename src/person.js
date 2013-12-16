@@ -1,10 +1,3 @@
-function randomColor(){
-  var r = _.random(100, 170);
-  var g = _.random(100, 170);
-  var b = _.random(150, 230);
-  return createjs.Graphics.getRGB(r,g,b);
-}
-
 function drawPerson(graphics, opts) {
   graphics.
     clear().
@@ -74,9 +67,9 @@ function comparePersonShapes(shape1, shape2) {
 
 function randomPerson(width, height) {
   var shapeOptions = {
-    headColor: randomColor(),
+    headColor: randomFleshColor(),
     headRadius: _.random(20, 23),
-    bodyColor: randomColor(),
+    bodyColor: randomClothingColor(),
     bodyWidth: _.random(35, 70),
     bodyHeight: _.random(50, 80)
   };
