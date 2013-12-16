@@ -1,10 +1,37 @@
+function randomFleshColor(){
+  var h = _.random(  58 , 62  );
+  var s = _.random(  30 , 160 );
+  var l = _.random(  32 , 224 );
+  
+  var rgb=hslToRgb(h,s,l);
+  var r = getColorRed(rgb);
+  var g = getColorGreen(rgb);
+  var b = getColorBlue(rgb);
+  
+  return createjs.Graphics.getRGB(r,g,b);
+  
+}
+function randomClothingColor(){
+  var h = _.random(  120, 360 );
+  var s = _.random(  192, 255 );
+  var l = _.random(  32 , 224 );
+  
+  var rgb=hslToRgb(h,s,l);
+  var r = getColorRed(rgb);
+  var g = getColorGreen(rgb);
+  var b = getColorBlue(rgb);
+  
+  return createjs.Graphics.getRGB(r,g,b);
+}
+
+
 function hslToRgb(h, s, l) {
   var r;
   var g;
   var b;
 
   var temp1;
-  var temp2
+  var temp2;
   var rtemp;
   var gtemp;
   var btemp;

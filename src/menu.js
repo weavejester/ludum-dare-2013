@@ -16,7 +16,7 @@ function createButton(px, py, w, h, text, bcol,newstate) {
   button.y = h;
   button.addChild(background, label);
 
-  // set up listeners for all display objects, for both the non-capture (bubble / target) and capture phases:
+  // set up listeners for all display objects
   _([button, label, background]).each(function(target) {
     target.addEventListener('click', function(e) { Game.current.changeState(newstate); });
   });
